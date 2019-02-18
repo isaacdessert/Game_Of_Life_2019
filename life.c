@@ -31,18 +31,19 @@ void print_grid(int x, int y, char** grid) {
 	{
 		for(int j = 0; j < y; j++)
 		{
+			
+			//if its at the end of the matrix add to new lines
+			if(j == y - 1  && i == x - 1)
+				if (grid[i][j] == 0) 
+    					printf(" .\n-------------------------\n");
+				else 
+   					 printf(" X\n-------------------------\n");
 			//if its at the end of the line make a new line
-			if(j == y - 1)
+			else if(j == y - 1)
 				if (grid[i][j] == 0) 
     					printf(" .\n");
 				else 
    					 printf(" X\n");
-			//if its at the end of the matrix add to new lines
-			else if(j == y - 1  && i == x - 1)
-				if (grid[i][j] == 0) 
-    					printf(" .\n\n");
-				else 
-   					 printf(" X\n\n");
 
 			else
 				if (grid[i][j] == 0) 
@@ -71,30 +72,25 @@ char** mutate(int x, int y, char** grid) {
 	        //A live cell with less than two live neighbors dies
 	        if(grid[i][j] == 1 && gNeighbors < 2){
 				newGrid[i][j] = 0;
-				printf("Rule one activated\n");
 			}
 	           
 	        //A live cell with two or three live neighbors lives
 	        else if(grid[i][j] == 1 && (gNeighbors == 2 || gNeighbors == 3)){
 				newGrid[i][j] = 1;
-				printf("Rule two activated\n");
 			}
 	            
 	        //A live cell with more than three neighbors dies
 	        else if(grid[i][j] == 1 && gNeighbors > 3){
 				newGrid[i][j] = 0;
-				printf("Rule three activated\n");
 			}
 	            
 	        //A dead cell with three live neighbors becomes live
 	        else if(grid[i][j] == 0 && gNeighbors ==3){
 				newGrid[i][j] = 1;
-				printf("Rule four activated\n");
 			}
 	            
 	        else{
 				newGrid[i][j] = grid[i][j];
-				printf("Piece remaines the same\n");
 			}
 				
 		}
@@ -105,44 +101,164 @@ char** mutate(int x, int y, char** grid) {
  * the number of live neighbors a cell has.
  */
 int get_neighbors(int i, int j, int x, int y, char** grid) {
-	printf("Enters get_neighbors\n");
 	int numberLiving = 0;
-	printf("\nPiece being looked at: %d\n", grid[i][j]);
 
 	//Check from top left
 	if(j == 0 && i == 0){
 		//check right
 		if(grid[i][j + 1] == 1)
 			numberLiving = numberLiving + 1;
-
+		//check bottom right
+		if(grid[i + 1][j+1] == 1)
+			numberLiving = numberLiving + 1;
+		//check bottom
+		if(grid[i + 1][j] == 1)
+			numberLiving = numberLiving +  1;
 	}
-	//check right by one
-	if(j + 1 < y && grid[i][j + 1] == 1){
-		numberLiving = numberLiving + 1;
-	}	
-	//check diagonal bottom right
-	else if(i + 1 < x && j + 1 < y && grid[i+1][j + 1] == 1)
-		numberLiving = numberLiving + 1;
-	//check down by one
-	else if(i + 1 < x && grid[i + 1][j] == 1)
-		numberLiving = numberLiving + 1;
-	//check diagonal bottom left
-	else if(i + 1 < x && j - 1 >= 0 && grid[i + 1][j - 1] == 1)
-		numberLiving = numberLiving + 1;
-	//check left
-	else if(j - 1 >= 0 && grid[i][j-1] == 1)
-		numberLiving = numberLiving + 1;
-	//check diagonal up left
-	else if(j -1 >= 0 && i - 1 >=0 && grid[i-1][j-1] == 1)
-		numberLiving = numberLiving + 1;
-	//check up
-	else if(i - 1 >= 0 && grid[i - 1][j] == 1)
-		numberLiving = numberLiving + 1;
-	//check up right
-	else if(i - 1 >= 0 && j + 1 <y && grid[i-1][j + 1] == 1)
-		numberLiving = numberLiving + 1;
 
-	printf("Your number is: %d\n", numberLiving);
+	//Check left column
+	if(j == 0 && i > 0 && i < x-1){
+		//check right
+		if(grid[i][j + 1] == 1)
+			numberLiving = numberLiving + 1;
+		//check upper right
+		if(grid[i - 1][j + 1] == 1)
+			numberLiving = numberLiving + 1;
+		//check bottom right
+		if(grid[i + 1][j + 1] == 1)
+			numberLiving = numberLiving + 1;
+		//check bottom
+		if(grid[i + 1][j] == 1)
+			numberLiving = numberLiving + 1;
+		//check top
+		if(grid[i - 1][j] == 1)
+			numberLiving = numberLiving + 1;
+	}
+
+	//Check bottom left corner
+	if(j == 0 && i == x - 1){
+		//check top
+		if(grid[i - 1][j] ==1)
+			numberLiving = numberLiving + 1;
+		//check upper right
+		if(grid[i - 1][j + 1] == 1)
+			numberLiving = numberLiving + 1;
+		//check right
+		if(grid[i][j + 1] == 1)
+			numberLiving = numberLiving + 1;
+	}
+
+	//Check upper right corner
+	if(j == y - 1 && i == 0){
+		//check left
+		if(grid[i][j - 1] == 1)
+			numberLiving = numberLiving + 1;
+		//check bottom
+		if(grid[i + 1][j]== 1)
+			numberLiving = numberLiving + 1;
+		//check bottom left
+		if(grid[i + 1][j - 1] == 1)
+			numberLiving = numberLiving + 1;
+	}
+
+	//Check far right column
+	if(j == y - 1 && i > 0 && i < x-1){
+		//check left
+		if(grid[i][j - 1] == 1)
+			numberLiving = numberLiving + 1;
+		//check bottom left
+		if(grid[i + 1][j - 1] == 1)
+			numberLiving = numberLiving + 1;
+		//check upper left
+		if(grid[i - 1][j - 1] == 1)
+			numberLiving = numberLiving + 1;
+		//check bottom
+		if(grid[i + 1][j] == 1)
+			numberLiving = numberLiving + 1;
+		//check top
+		if(grid[i - 1][j] == 1)
+			numberLiving = numberLiving + 1;
+	}
+
+	//Check bottom right corner
+	if(j == y - 1 && i == x - 1){
+		//check left
+		if(grid[i][j  - 1] == 1)
+			numberLiving = numberLiving + 1;
+		//check top
+		if(grid[i - 1][j]== 1)
+			numberLiving = numberLiving + 1;
+		//check upper left
+		if(grid[i - 1][j - 1] == 1)
+			numberLiving = numberLiving + 1;
+	}
+
+	//Check top row
+	if(i == 0 && j > 0 && j < y-1){
+		//check left
+		if(grid[i][j - 1] == 1)
+			numberLiving = numberLiving + 1;
+		//check bottom left
+		if(grid[i + 1][j - 1] == 1)
+			numberLiving = numberLiving + 1;
+		//check bottom right
+		if(grid[i + 1][j + 1] == 1)
+			numberLiving = numberLiving + 1;
+		//check bottom
+		if(grid[i + 1][j] == 1)
+			numberLiving = numberLiving + 1;
+		//check right
+		if(grid[i][j + 1] == 1)
+			numberLiving = numberLiving + 1;
+	}
+
+	//Check bottom row
+	if(i == x - 1 && j > 0 && j < y-1){
+		//check left
+		if(grid[i][j - 1] == 1)
+			numberLiving = numberLiving + 1;
+		//check top left
+		if(grid[i - 1][j - 1] == 1)
+			numberLiving = numberLiving + 1;
+		//check top right
+		if(grid[i - 1][j + 1] == 1)
+			numberLiving = numberLiving + 1;
+		//check top
+		if(grid[i - 1][j] == 1)
+			numberLiving = numberLiving + 1;
+		//check right
+		if(grid[i][j + 1] == 1)
+			numberLiving = numberLiving + 1;
+	}
+
+	//Check middle
+	if(i > 0 && i < x -1 && j > 0 && j < y-1){
+		//check left
+		if(grid[i][j - 1] == 1)
+			numberLiving = numberLiving + 1;
+		//check bottom left
+		if(grid[i + 1][j - 1] == 1)
+			numberLiving = numberLiving + 1;
+		//check bottom right
+		if(grid[i + 1][j + 1] == 1)
+			numberLiving = numberLiving + 1;
+		//check bottom
+		if(grid[i + 1][j] == 1)
+			numberLiving = numberLiving + 1;
+		//check right
+		if(grid[i][j + 1] == 1)
+			numberLiving = numberLiving + 1;
+		//check top left
+		if(grid[i - 1][j - 1] == 1)
+			numberLiving = numberLiving + 1;
+		//check top right
+		if(grid[i - 1][j + 1] == 1)
+			numberLiving = numberLiving + 1;
+		//check top
+		if(grid[i - 1][j] == 1)
+			numberLiving = numberLiving + 1;
+	}
+
 	return numberLiving;
 }
 
