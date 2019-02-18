@@ -12,6 +12,7 @@ size_t read_file(char* file_name, char** contents) {
 	stat(file_name, &st);
 	FILE* file = fopen(file_name, "r");
 	*contents = (char*) malloc(st.st_size * sizeof(char));
+	//size_t num_bytes = fread(*contents, st.st_size, 1, file);
 	fread(*contents, st.st_size, 1, file);
 	fclose(file);
 	return st.st_size;
